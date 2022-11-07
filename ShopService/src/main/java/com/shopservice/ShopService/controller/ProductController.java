@@ -3,12 +3,14 @@ package com.shopservice.ShopService.controller;
 import com.shopservice.ShopService.exception.ResourceNotFoundException;
 import com.shopservice.ShopService.model.Product;
 import com.shopservice.ShopService.repository.ProductRepository;
+import com.shopservice.ShopService.routing.RoutingWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/product")
@@ -21,24 +23,29 @@ public class ProductController {
     private ProductRepository productRepository;
 
     @GetMapping("/")
-    public String getAllProducts() throws InterruptedException {
-        return serverProperties.getPort() + productRepository.findAll().toString();
+    @RoutingWith("slaveDataSource")
+    @ResponseBody
+    public List<Product> getAllProducts() throws InterruptedException {
+        return productRepository.findAll();
     }
 
     @PostMapping("/")
+    @RoutingWith
     public Product createProduct(@RequestBody Product product) {
         return productRepository.save(product);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable(value = "id") long productId) throws ResourceNotFoundException {
+    @RoutingWith
+    public ResponseEntity<Product> getProductById(@PathVariable(value = "id") UUID productId) throws ResourceNotFoundException {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("No product for this id" + productId));
         return ResponseEntity.ok().body(product);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable(value = "id") long productId,
+    @RoutingWith
+    public ResponseEntity<Product> updateProduct(@PathVariable(value = "id") UUID productId,
                                  @RequestBody Product productDetails) throws ResourceNotFoundException {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("No product for this id" + productId));
@@ -52,9 +59,10 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable(value = "id") long productId) throws ResourceNotFoundException {
+    @RoutingWith
+    public ResponseEntity<?> deleteProduct(@PathVariable(value = "id") UUID productId) throws ResourceNotFoundException {
         productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("No product for this id" + productId));
+                .orElseThrow(() -> new ResourceNotFoundException("No product for this id " + productId));
 
         productRepository.deleteById(productId);
         return ResponseEntity.ok().build();
