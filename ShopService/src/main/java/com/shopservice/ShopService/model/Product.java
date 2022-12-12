@@ -26,7 +26,7 @@ public class Product {
     @Type(type="org.hibernate.type.UUIDCharType")
     private UUID id;
     @NonNull
-    private String name;
+    private String names;
     @NonNull
     private double price;
     @NonNull
