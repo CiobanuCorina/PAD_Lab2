@@ -49,7 +49,7 @@ public class ProductController {
                                  @RequestBody Product productDetails) throws ResourceNotFoundException {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("No product for this id" + productId));
-        product.setName(productDetails.getName());
+        product.setNames(productDetails.getNames());
         product.setPrice(productDetails.getPrice());
         product.setQuantity(productDetails.getQuantity());
 
