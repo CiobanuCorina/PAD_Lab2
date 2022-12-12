@@ -25,8 +25,7 @@ import java.util.Map;
 @SpringBootApplication
 @EnableEurekaClient
 public class ShopServiceApplication {
-
-	// On prod will use only master from cloud
+	
 	@Bean("masterDataSource")
 	@ConfigurationProperties(prefix = "spring.datasource")
 	DataSource masterDataSource() {
