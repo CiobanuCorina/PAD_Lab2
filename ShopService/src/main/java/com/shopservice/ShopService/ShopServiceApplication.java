@@ -25,7 +25,8 @@ import java.util.Map;
 @SpringBootApplication
 @EnableEurekaClient
 public class ShopServiceApplication {
-	
+
+	// test pipeline
 	@Bean("masterDataSource")
 	@ConfigurationProperties(prefix = "spring.datasource")
 	DataSource masterDataSource() {
